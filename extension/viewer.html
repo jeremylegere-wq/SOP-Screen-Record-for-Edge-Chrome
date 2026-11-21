@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step Recorder - Guides</title>
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+  <!-- Library: all saved guides -->
+  <div id="libraryView" hidden>
+    <header class="toolbar"><h1 class="app-title">Your guides</h1></header>
+    <main class="wrap">
+      <p id="emptyBanner" class="banner" hidden>
+        No steps were captured. Make sure you click around on a normal website (not an <code>edge://</code> page)
+        while the red recording toolbar is showing, then press Stop.
+      </p>
+      <div id="cards" class="cards"></div>
+      <div id="libraryEmpty" class="empty" hidden>
+        <p><strong>No guides yet.</strong></p>
+        <p>Click the Step Recorder icon in the toolbar (or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>), then walk through your workflow.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Editor: one guide -->
+  <div id="editorView" hidden>
+    <header class="toolbar">
+      <button id="back" class="small" title="Back to all guides">← All guides</button>
+      <input id="guideTitle" class="guide-title" type="text" placeholder="Guide title" aria-label="Guide title">
+      <span id="saved" class="saved" aria-live="polite"></span>
+      <div class="actions">
+        <button data-action="export-html" class="primary">Download guide (HTML)</button>
+        <button data-action="print">Print / save as PDF</button>
+        <button data-action="copy-md">Copy as Markdown</button>
+        <button data-action="delete-guide" class="danger">Delete guide</button>
+      </div>
+    </header>
+    <main id="steps" class="wrap" aria-label="Steps"></main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+    <span id="toastText"></span><button id="toastAction" class="link"></button>
+  </div>
+
+  <script src="lib/text.js"></script>
+  <script src="lib/guide.js"></script>
+  <script src="lib/store.js"></script>
+  <script src="lib/render.js"></script>
+  <script src="viewer.js"></script>
+</body>
+</html>

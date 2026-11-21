@@ -1,0 +1,104 @@
+name: CI
+
+# Runs on every push to main and on every pull request. The release workflow reuses it (workflow_call),
+# so a tag is only released after exactly the same checks pass.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read # read-only: nothing here can push, tag, comment or publish
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }} # supersede old PR runs, never cancel main/tag runs
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1" # only the browser job downloads Chromium
+
+jobs:
+  checks:
+    name: Checks (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false # see every failing platform, not just the first
+      matrix:
+        include:
+          - { os: ubuntu-latest, node: 22 } # minimum supported Node (see "engines" in package.json)
+          - { os: ubuntu-latest, node: 24 } # current LTS
+          - { os: windows-latest, node: 22 } # Edge users are mostly on Windows: line endings, paths
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node ${{ matrix.node }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Check versions agree (manifest, package.json, lockfile)
+        run: npm run check:versions
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build extension package
+        run: npm run build
+
+      - name: Package is reproducible (second build is byte-identical)
+        shell: bash
+        run: |
+          node scripts/pack.mjs --out dist-check
+          for f in dist/*.sha256; do
+            if ! diff "$f" "dist-check/$(basename "$f")"; then
+              echo "::error::Two builds of the same source produced different zips. Check for CRLF line endings or untracked files in extension/."
+              exit 1
+            fi
+          done
+          echo "Identical: $(cat dist/*.sha256)"
+
+      - name: Upload extension package (for testing PR builds)
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: extension-package
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+
+  browser-test:
+    name: Browser test (Chromium + real extension)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Record, edit and export a guide in a real browser
+        run: npm run test:e2e
