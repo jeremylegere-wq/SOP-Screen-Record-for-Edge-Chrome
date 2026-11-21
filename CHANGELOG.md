@@ -9,6 +9,8 @@ Removed, Security as needed). `npm run version:set -- X.Y.Z` moves them into a d
 
 ## Unreleased
 
+## 1.0.0 - 2026-11-21
+
 ### Added
 - Record clicks, typed text, dropdown choices and Enter presses into a step-by-step guide with a screenshot per step and the clicked element highlighted.
 - Floating on-page toolbar showing the step count, with Pause, Stop and a "move" button; hidden automatically while a screenshot is taken.
