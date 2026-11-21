@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Step Recorder</title>
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <span id="dot" class="dot"></span>
+    <h1>Step Recorder</h1>
+  </header>
+
+  <!-- Not recording -->
+  <section id="idle">
+    <p id="blocked" class="notice" hidden>This page can't be recorded (browser pages are off limits). Open a normal website, then start.</p>
+    <button id="start" class="primary big">● Start recording</button>
+    <p class="hint">Or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> any time.</p>
+
+    <div id="recentWrap" hidden>
+      <h2>Recent guides</h2>
+      <ul id="recent" class="recent"></ul>
+      <button id="all" class="link">See all guides</button>
+    </div>
+  </section>
+
+  <!-- Recording -->
+  <section id="live" hidden>
+    <p id="liveStatus" class="live-status"></p>
+    <button id="stop" class="stop big">■ Stop &amp; view guide</button>
+    <div class="row">
+      <button id="pause">Pause</button>
+      <button id="discard" class="danger">Discard</button>
+    </div>
+    <p class="hint"><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> stops, <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> pauses.</p>
+  </section>
+
+  <details id="settings">
+    <summary>Settings</summary>
+    <label><input type="checkbox" id="blurSensitive"> Blur password and card fields in screenshots</label>
+    <label><input type="checkbox" id="hideTypedText"> Don't write what I type into the steps</label>
+    <label><input type="checkbox" id="showToolbar"> Show the floating toolbar on pages</label>
+  </details>
+
+  <script src="lib/text.js"></script>
+  <script src="lib/guide.js"></script>
+  <script src="lib/store.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

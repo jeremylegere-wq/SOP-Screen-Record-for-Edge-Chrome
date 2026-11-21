@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Step Recorder</title>
+  <link rel="stylesheet" href="ui.css">
+  <style>
+    main { max-width: 640px; margin: 48px auto; padding: 0 24px; }
+    h1 { font-size: 28px; margin: 0 0 6px; }
+    .lead { color: var(--muted); margin: 0 0 28px; font-size: 16px; }
+    ol { list-style: none; counter-reset: s; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 14px; }
+    li { counter-increment: s; display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    li::before { content: counter(s); flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    li strong { display: block; }
+    .small { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Step Recorder is installed</h1>
+    <p class="lead">Turn any workflow into a step-by-step guide while you do it.</p>
+    <ol>
+      <li><div><strong>Pin the extension</strong>Click the puzzle-piece icon in the Edge toolbar, then the pin next to Step Recorder, so it's always one click away.</div></li>
+      <li><div><strong>Start recording</strong>Open the website where your workflow begins, click the Step Recorder icon, then <em>Start recording</em>. Or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>.</div></li>
+      <li><div><strong>Do the workflow as normal</strong>Every click, typed value and dropdown choice becomes a step with a screenshot. A small red toolbar on the page shows the step count and lets you pause or stop.</div></li>
+      <li><div><strong>Stop, tidy up, share</strong>Edit the wording, reorder or delete steps, then download the guide as a single HTML file or save it as a PDF.</div></li>
+    </ol>
+    <p class="small">Everything stays in your browser. Password and card fields are hidden in step text and blurred in screenshots, but always check a guide before sharing it. You can change the shortcuts at <code>edge://extensions/shortcuts</code>.</p>
+  </main>
+</body>
+</html>
